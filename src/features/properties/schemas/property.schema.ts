@@ -40,7 +40,7 @@ export type PropertyFormInput = {
 export const propertyFormSchema = z.object({
   title: z.string().min(3, 'Mínimo 3 caracteres'),
   description: z.string().min(20, 'Mínimo 20 caracteres'),
-  price: z.number({ invalid_type_error: 'Ingresá un precio válido' }).min(0),
+  price: z.number({ error: 'Ingresá un precio válido' }).min(0),
   currency: z.enum(['USD', 'EUR', 'ARS']),
   location: z.string().min(3, 'Mínimo 3 caracteres'),
   type: z.enum(propertyTypeValues, { error: 'Seleccioná un tipo' }),

@@ -76,7 +76,7 @@ export const propertiesService = {
 
     if (filters.priceMin != null) q = q.gte('price', filters.priceMin)
     if (filters.priceMax != null) q = q.lte('price', filters.priceMax)
-    if (filters.types?.length) q = q.in('type', filters.types)
+    if (filters.types?.length) q = q.in('type', filters.types as PropertyType[])
     if (filters.bedroomsMin != null) q = q.gte('bedrooms', filters.bedroomsMin)
     if (filters.location) q = q.ilike('location', `%${filters.location}%`)
 
@@ -136,7 +136,20 @@ export const propertiesService = {
   async create(input: Omit<Property, 'id' | 'createdAt' | 'updatedAt'>): Promise<Property> {
     const { data, error } = await supabase
       .from('properties')
-      .insert(toRow(input))
+      .insert({
+        title: input.title,
+        description: input.description,
+        price: input.price,
+        currency: input.currency,
+        location: input.location,
+        type: input.type,
+        bedrooms: input.bedrooms,
+        bathrooms: input.bathrooms,
+        sqm: input.sqm,
+        images: input.images,
+        status: input.status,
+        featured: input.featured,
+      })
       .select()
       .single()
 

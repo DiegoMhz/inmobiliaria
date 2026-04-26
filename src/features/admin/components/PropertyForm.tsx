@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { z } from 'zod'
 import { propertyFormSchema } from '@/features/properties/schemas/property.schema'
 import { PROPERTY_TYPE, PROPERTY_STATUS } from '@/features/properties/types/property.types'
-import type { Property } from '@/features/properties/types/property.types'
+import type { Property, PropertyStatus } from '@/features/properties/types/property.types'
 import { Input } from '@/shared/ui/Input'
 import { Textarea } from '@/shared/ui/Textarea'
 import { Checkbox } from '@/shared/ui/Checkbox'
@@ -183,7 +183,7 @@ export function PropertyForm({ initial, mode, isPending, submitError, onSubmit }
         <select
           id="status"
           value={status}
-          onChange={(e) => setStatus(e.target.value)}
+          onChange={(e) => setStatus(e.target.value as PropertyStatus)}
           className={selectClass}
         >
           <option value={PROPERTY_STATUS.ACTIVE}>Activa</option>

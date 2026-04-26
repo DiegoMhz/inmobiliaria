@@ -18,7 +18,7 @@ interface ActionState {
   error: string | null
 }
 
-export function LoginForm({ onSuccess }: LoginFormProps) {
+export function LoginForm({ onSuccess: _onSuccess }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false)
 
   const [state, submitAction, isPending] = useActionState<ActionState, FormData>(

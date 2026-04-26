@@ -14,7 +14,7 @@ export function Gallery({ images }: GalleryProps) {
 
   if (images.length === 0) return null
 
-  const mainUrl = getStorageUrl(images[0], { width: 800, quality: 85 })
+  const mainUrl = getStorageUrl(images[0]!, { width: 800, quality: 85 })
 
   if (images.length === 1) {
     return (

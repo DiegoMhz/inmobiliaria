@@ -16,6 +16,7 @@ export function useScrollReveal<T extends HTMLElement>() {
 
     const io = new IntersectionObserver(
       ([entry]) => {
+        if (!entry) return
         if (entry.isIntersecting) {
           entry.target.classList.add('is-revealed')
           io.disconnect()
