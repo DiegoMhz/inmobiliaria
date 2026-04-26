@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { MapPin } from 'lucide-react'
+import { MapPin, ChevronDown } from 'lucide-react'
 import { Button } from '@/shared/ui/Button'
 import { cn } from '@/shared/lib/cn'
 
@@ -44,48 +44,65 @@ export function SearchBar() {
     <div className="w-full bg-surface/80 backdrop-blur-[10px] border border-border">
       <div className="flex flex-col md:flex-row">
         {/* Location */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b md:border-b-0 md:border-r border-border flex-1">
+        <div className="flex items-center gap-3 px-5 py-3 border-b md:border-b-0 md:border-r border-border flex-1">
           <MapPin size={16} className="text-accent shrink-0" />
-          <input
-            type="text"
-            placeholder="Ubicación"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            className="bg-transparent outline-none text-body text-text-primary placeholder:text-text-tertiary flex-1 font-sans"
-          />
+          <div className="flex flex-col flex-1">
+            <span className="text-[10px] text-text-tertiary font-medium tracking-widest uppercase mb-1">
+              Ubicación
+            </span>
+            <input
+              type="text"
+              placeholder="Ciudad o zona..."
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              className="bg-transparent outline-none text-body text-text-primary placeholder:text-text-tertiary font-sans"
+            />
+          </div>
         </div>
 
         {/* Type */}
-        <div className="flex items-center px-5 py-4 border-b md:border-b-0 md:border-r border-border min-w-[160px]">
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className={selectClass}
-            aria-label="Tipo de propiedad"
-          >
-            {PROPERTY_TYPES.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-surface text-text-primary">
-                {opt.label}
-              </option>
-            ))}
-          </select>
+        <div className="flex flex-col justify-center px-5 py-3 border-b md:border-b-0 md:border-r border-border min-w-[160px]">
+          <span className="text-[10px] text-text-tertiary font-medium tracking-widest uppercase mb-1">
+            Tipo
+          </span>
+          <div className="relative flex items-center">
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className={cn(selectClass, 'pr-5')}
+              aria-label="Tipo de propiedad"
+            >
+              {PROPERTY_TYPES.map((opt) => (
+                <option key={opt.value} value={opt.value} className="bg-surface text-text-primary">
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={14} className="absolute right-0 text-text-tertiary pointer-events-none" />
+          </div>
         </div>
 
         {/* Bedrooms */}
-        <div className="flex items-center px-5 py-4 border-b md:border-b-0 md:border-r border-border min-w-[160px]">
-          <select
-            value={bedrooms}
-            onChange={(e) => setBedrooms(e.target.value)}
-            className={selectClass}
-            aria-label="Habitaciones"
-          >
-            {BEDROOMS.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-surface text-text-primary">
-                {opt.label}
-              </option>
-            ))}
-          </select>
+        <div className="flex flex-col justify-center px-5 py-3 border-b md:border-b-0 md:border-r border-border min-w-[160px]">
+          <span className="text-[10px] text-text-tertiary font-medium tracking-widest uppercase mb-1">
+            Habitaciones
+          </span>
+          <div className="relative flex items-center">
+            <select
+              value={bedrooms}
+              onChange={(e) => setBedrooms(e.target.value)}
+              className={cn(selectClass, 'pr-5')}
+              aria-label="Habitaciones"
+            >
+              {BEDROOMS.map((opt) => (
+                <option key={opt.value} value={opt.value} className="bg-surface text-text-primary">
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown size={14} className="absolute right-0 text-text-tertiary pointer-events-none" />
+          </div>
         </div>
 
         {/* Search button */}

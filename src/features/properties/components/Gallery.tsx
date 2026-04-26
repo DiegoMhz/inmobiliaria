@@ -7,9 +7,7 @@ interface GalleryProps {
 
 export function Gallery({ images }: GalleryProps) {
   const openLightbox = useUIStore((s) => s.openLightbox)
-
   const lightboxUrls = images.map((p) => getStorageUrl(p, { width: 1600, quality: 90 }))
-
   const open = (index: number) => openLightbox(lightboxUrls, index)
 
   if (images.length === 0) return null
@@ -29,33 +27,56 @@ export function Gallery({ images }: GalleryProps) {
     )
   }
 
+  if (images.length === 2) {
+    const secondUrl = getStorageUrl(images[1]!, { width: 800, quality: 85 })
+    return (
+      <div className="flex flex-col gap-1 md:grid md:grid-cols-2 md:aspect-[16/9]">
+        <div className="aspect-video md:aspect-auto overflow-hidden cursor-pointer" onClick={() => open(0)}>
+          <img
+            src={mainUrl}
+            alt="Imagen 1 de la propiedad"
+            className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+          />
+        </div>
+        <div className="aspect-video md:aspect-auto overflow-hidden cursor-pointer" onClick={() => open(1)}>
+          <img
+            src={secondUrl}
+            alt="Imagen 2 de la propiedad"
+            className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+          />
+        </div>
+      </div>
+    )
+  }
+
   const thumbCount = Math.min(images.length - 1, 3)
-  // Images not visible at all (beyond the 3 thumbs)
   const hiddenCount = images.length - 1 - thumbCount
 
+  const thumbItems = Array.from({ length: thumbCount }, (_, i) => {
+    const imgIndex = i + 1
+    return {
+      imgIndex,
+      thumbUrl: getStorageUrl(images[imgIndex]!, { width: 400, quality: 75 }),
+      showOverlay: i === thumbCount - 1 && hiddenCount > 0,
+    }
+  })
+
   return (
-    <div className="flex gap-1 aspect-[16/9]">
-      {/* Main image — 2/3 */}
-      <div className="w-2/3 shrink-0 overflow-hidden cursor-pointer" onClick={() => open(0)}>
-        <img
-          src={mainUrl}
-          alt="Imagen principal de la propiedad"
-          className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
-        />
-      </div>
-
-      {/* Thumbnails column — 1/3 */}
-      <div className="flex flex-col gap-1 flex-1">
-        {Array.from({ length: thumbCount }, (_, i) => {
-          const imgIndex = i + 1
-          const thumbUrl = getStorageUrl(images[imgIndex] as string, { width: 400, quality: 75 })
-          const isLastThumb = i === thumbCount - 1
-          const showOverlay = isLastThumb && hiddenCount > 0
-
-          return (
+    <>
+      {/* Mobile: imagen principal + tira horizontal de thumbs */}
+      <div className="md:hidden flex flex-col gap-1">
+        <div className="w-full aspect-video overflow-hidden cursor-pointer" onClick={() => open(0)}>
+          <img
+            src={mainUrl}
+            alt="Imagen principal de la propiedad"
+            className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+          />
+        </div>
+        <div className="flex gap-1">
+          {thumbItems.map(({ imgIndex, thumbUrl, showOverlay }) => (
             <div
               key={imgIndex}
-              className="relative flex-1 overflow-hidden cursor-pointer"
+              className="relative flex-1 aspect-square overflow-hidden cursor-pointer"
               onClick={() => open(imgIndex)}
             >
               <img
@@ -65,15 +86,48 @@ export function Gallery({ images }: GalleryProps) {
               />
               {showOverlay && (
                 <div className="absolute inset-0 bg-black/55 flex items-center justify-center">
-                  <span className="text-white font-medium text-xl tracking-wide">
-                    +{hiddenCount + 1}
-                  </span>
+                  <span className="text-white font-medium text-xl tracking-wide">+{hiddenCount + 1}</span>
                 </div>
               )}
             </div>
-          )
-        })}
+          ))}
+        </div>
       </div>
-    </div>
+
+      {/* Desktop: CSS grid — main 2/3, thumbs 1/3 divididos en filas iguales */}
+      <div
+        className="hidden md:grid gap-1 aspect-[16/9]"
+        style={{
+          gridTemplateColumns: '2fr 1fr',
+          gridTemplateRows: `repeat(${thumbCount}, 1fr)`,
+        }}
+      >
+        <div className="row-span-full overflow-hidden cursor-pointer" onClick={() => open(0)}>
+          <img
+            src={mainUrl}
+            alt="Imagen principal de la propiedad"
+            className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+          />
+        </div>
+        {thumbItems.map(({ imgIndex, thumbUrl, showOverlay }) => (
+          <div
+            key={imgIndex}
+            className="relative overflow-hidden cursor-pointer"
+            onClick={() => open(imgIndex)}
+          >
+            <img
+              src={thumbUrl}
+              alt={`Imagen ${imgIndex + 1} de la propiedad`}
+              className="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-500"
+            />
+            {showOverlay && (
+              <div className="absolute inset-0 bg-black/55 flex items-center justify-center">
+                <span className="text-white font-medium text-xl tracking-wide">+{hiddenCount + 1}</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   )
 }

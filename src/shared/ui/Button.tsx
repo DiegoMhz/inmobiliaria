@@ -47,7 +47,8 @@ export function Button({
       )}
       {...props}
     >
-      {loading ? <Spinner size="sm" /> : children}
+      {loading && <Spinner size="sm" />}
+      {children}
     </button>
   )
 }
